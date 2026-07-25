@@ -3,13 +3,14 @@ package com.example.app.service;
 import com.example.app.dto.BookDto;
 import com.example.app.dto.BookSearchParameters;
 import com.example.app.dto.CreateBookRequestDto;
-import com.example.app.model.Book;
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BookService {
     BookDto save(CreateBookRequestDto requestDto);
 
-    List<Book> findALl();
+    Page<BookDto> findALl(Pageable pageable);
 
     BookDto getBookById(Long id);
 
