@@ -1,5 +1,6 @@
 package com.example.app.exception;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+@Hidden
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
@@ -50,5 +52,13 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             return field + " " + message;
         }
         return error.getDefaultMessage();
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleAllExceptions(Exception ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("errors", ex.getCause().getLocalizedMessage());
+        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
