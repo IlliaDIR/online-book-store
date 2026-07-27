@@ -1,8 +1,8 @@
 package com.example.app.mapper;
 
 import com.example.app.config.BookMapperConfig;
-import com.example.app.dto.BookDto;
-import com.example.app.dto.CreateBookRequestDto;
+import com.example.app.dto.book.BookDto;
+import com.example.app.dto.book.CreateBookRequestDto;
 import com.example.app.model.Book;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
