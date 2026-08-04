@@ -1,13 +1,12 @@
 package com.example.app.dto.book;
 
 import java.math.BigDecimal;
-import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class BookDto {
+public class BookDtoWithoutCategoryIds {
     private Long id;
     private String title;
     private String author;
@@ -15,5 +14,4 @@ public class BookDto {
     private String description;
     private String coverImage;
     private BigDecimal price;
-    private List<Long> categoryIds;
 }

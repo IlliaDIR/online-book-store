@@ -34,7 +34,7 @@ public class BookController {
     @Operation(summary = "Get all books")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public Page<BookDto> getAll(Pageable pageable) {
-        return bookService.findALl(pageable);
+        return bookService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
