@@ -10,6 +10,7 @@ import com.example.app.model.RoleName;
 import com.example.app.model.User;
 import com.example.app.repository.role.RoleRepository;
 import com.example.app.repository.user.UserRepository;
+import com.example.app.service.ShoppingCartService;
 import com.example.app.service.UserService;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final ShoppingCartService shoppingCartService;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto request)
@@ -38,6 +40,8 @@ public class UserServiceImpl implements UserService {
                         new EntityNotFoundException(
                                 "Role with name " + RoleName.USER + " not found"));
         user.setRoles(Set.of(role));
-        return userMapper.toDto(userRepository.save(user));
+        User saved = userRepository.save(user);
+        shoppingCartService.createShoppingCart(user);
+        return userMapper.toDto(saved);
     }
 }
