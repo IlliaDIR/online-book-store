@@ -74,16 +74,20 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public ShoppingCartDto remove(Long id) {
         ShoppingCart shoppingCart = getShoppingCartByUserId(getUserId());
-        CartItem cartItem = getCartItemById(shoppingCart, id);
+        CartItem cartItem = cartItemRepository.findByIdAndShoppingCartId(
+                id, shoppingCart.getId()).orElseThrow(
+                    () -> new EntityNotFoundException("Can't find cart item with id: " + id)
+        );
         shoppingCart.getCartItems().remove(cartItem);
         return shoppingCartMapper.toDto(shoppingCartRepository.save(shoppingCart));
     }
 
     @Override
     public ShoppingCartDto updateQuantity(Long id, UpdateCartItemRequestDto requestDto) {
-        CartItem cartItem = cartItemRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Can't find cart with id: " + id)
-        );
+        ShoppingCart shoppingCart = getShoppingCartByUserId(getUserId());
+        CartItem cartItem = cartItemRepository.findByIdAndShoppingCartId(id, shoppingCart.getId())
+                .orElseThrow(() ->
+                        new EntityNotFoundException("Can't find cart item with id: " + id));
         cartItem.setQuantity(requestDto.getQuantity());
         return shoppingCartMapper.toDto(cartItemRepository.save(cartItem).getShoppingCart());
     }
@@ -92,15 +96,6 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User principal = (User) authentication.getPrincipal();
         return principal.getId();
-    }
-
-    private CartItem getCartItemById(ShoppingCart shoppingCart, Long id) {
-        return shoppingCart.getCartItems().stream()
-                .filter(item -> Objects.equals(item.getId(), id))
-                .findFirst()
-                .orElseThrow(
-                        () -> new EntityNotFoundException("CartItem with id " + id + " not found")
-                );
     }
 
     private ShoppingCart getShoppingCartByUserId(Long userId) {
